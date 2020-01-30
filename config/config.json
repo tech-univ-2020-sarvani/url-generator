@@ -1,0 +1,26 @@
+{
+  "development": {
+    "username": "sarvanideekshitula",
+    "password": null,
+    "database": "url-generator",
+    "host": "127.0.0.1",
+    "dialect": "postgres",
+    "operatorsAliases": false
+  },
+  "test": {
+    "username": "sarvanideekshitula",
+    "password": null,
+    "database": "url-generator",
+    "host": "127.0.0.1",
+    "dialect": "postgres",
+    "operatorsAliases": false
+  },
+  "production": {
+    "username": "sarvanideekshitula",
+    "password": null,
+    "database": "url-generator",
+    "host": "127.0.0.1",
+    "dialect": "postgres",
+    "operatorsAliases": false
+  }
+}
