@@ -8,4 +8,4 @@ const redirectUrlSchema = Joi.object({
 	id:Joi.string().required(),
 });
 
-module.exports = urlGeneratorSchema;
+module.exports = {urlGeneratorSchema, redirectUrlSchema};
