@@ -11,5 +11,21 @@ const urlGenerator = async (request, h)=> {
 		return h.response(e.message).code(500);
 	}
 };
+const redirectUrl = async (request, h) => {
+	try{
+		const url = request.url.pathname.substr(1);
+		const data = await dbUtils.findOneUrl(url);
+		console.log(data);
+		if(!data || !data.longurl){
+			return h.response('Not Found').code(404);
+		} 
+		if(data.createdAt < new Date(new Date().getTime() - 30*60000)){
+			return h.response('Gone').code(410);
+		} 
+		return h.redirect(data.longurl).code(200);
+	}catch(e){
+		return h.response(e.message).code(500);
+	}
+};
 
-module.exports = urlGenerator;
+module.exports = {urlGenerator, redirectUrl};
