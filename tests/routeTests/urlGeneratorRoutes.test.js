@@ -34,6 +34,9 @@ describe('In the server', () => {
 		const options = {
 			method: 'POST',
 			url: '/urls',
+			payload: {
+				'longUrl':'https://www.github.com/sarvanideekshitula',
+			}
 		};
 		const mockPostUrls = jest.spyOn(dbUtils, 'insertUrls');
 		mockPostUrls.mockRejectedValue(new Error('longUrl Not found'));
