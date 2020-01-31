@@ -50,13 +50,13 @@ describe('The function redirectUrl', () => {
 				}),
 		};
 		const mockRequest = {
-			payload: {}
+			params: 'localhost:8080/abcd'
 		};
 		const mockFindOneUrl = jest.spyOn(dbUtils, 'findOneUrl');
 		mockFindOneUrl.mockResolvedValue({'dataValues':{'longurl':'https://github.com/shubhamzanwar','shorturl':'localhost:8080/abcd'}});
 		await redirectUrl(mockRequest, mockHandler);
 		expect(mockFindOneUrl).toHaveBeenCalled();
-		expect(codeMock).toHaveBeenCalledWith(200);
+		expect(codeMock).toHaveBeenCalledWith(301);
 		expect(mockHandler.redirect).toHaveBeenCalledWith('https://github.com/shubhamzanwar');
 	});
 	it ('should call response with Not found and 404 status code when the url does not exist', async() => {
@@ -68,31 +68,13 @@ describe('The function redirectUrl', () => {
 				}),
 		};
 		const mockRequest = {
-			payload: {}
+			params: 'localhost:8080/abcd'
 		};
 		const mockFindOneUrl = jest.spyOn(dbUtils, 'findOneUrl');
-		mockFindOneUrl.mockRejectedValue(new Error('Not found'));
+		mockFindOneUrl.mockResolvedValue();
 		await redirectUrl(mockRequest, mockHandler);
 		expect(mockFindOneUrl).toHaveBeenCalled();
-		expect(codeMock).toHaveBeenCalledWith(204);
+		expect(codeMock).toHaveBeenCalledWith(404);
 		expect(mockHandler.response).toHaveBeenCalledWith('Not Found');
-	});
-	it ('should call response with Gone and 410 status code when the url expired', async() => {
-		const codeMock = jest.fn();
-		const mockHandler = {
-			response: jest.fn(
-				() => {
-					return {code: codeMock};
-				}),
-		};
-		const mockRequest = {
-			payload: {}
-		};
-		const mockFindOneUrl = jest.spyOn(dbUtils, 'findOneUrl');
-		mockFindOneUrl.mockRejectedValue(new Error('Gone'));
-		await redirectUrl(mockRequest, mockHandler);
-		expect(mockFindOneUrl).toHaveBeenCalled();
-		expect(codeMock).toHaveBeenCalledWith(410);
-		expect(mockHandler.response).toHaveBeenCalledWith('Gone');
 	});
 });

@@ -13,17 +13,20 @@ const urlGenerator = async (request, h)=> {
 };
 const redirectUrl = async (request, h) => {
 	try{
-		const url = request.url.pathname.substr(1);
+		const url = request.params.id;
+		console.log(url);
 		const data = await dbUtils.findOneUrl(url);
 		console.log(data);
-		if(!data || !data.longurl){
+		if(!data || !data.dataValues.longurl){
 			return h.response('Not Found').code(404);
 		} 
 		if(data.createdAt < new Date(new Date().getTime() - 30*60000)){
 			return h.response('Gone').code(410);
 		} 
-		return h.redirect(data.longurl).code(200);
+		console.log(data.dataValues.longurl);
+		return h.redirect(data.dataValues.longurl).code(301);
 	}catch(e){
+		console.log(e.message);
 		return h.response(e.message).code(500);
 	}
 };
