@@ -4,4 +4,11 @@ const insertUrls = async (data) => {
 	return urlData;
 };
 
-module.exports = {insertUrls};
+const findOneUrl = async(url) => {
+	const urlData = await db.urls.findOne({where: {
+		shorturl: url
+	}});
+	return urlData;
+};
+
+module.exports = {insertUrls, findOneUrl};
