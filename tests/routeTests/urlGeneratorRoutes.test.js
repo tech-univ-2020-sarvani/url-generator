@@ -26,9 +26,10 @@ describe('In the server', () => {
 			}
 		};
 		const mockPostUrls = jest.spyOn(dbUtils, 'insertUrls');
-		mockPostUrls.mockResolvedValue({'dataValues': {'shorturl': 'localhost:8080/abcd'}});
+		mockPostUrls.mockResolvedValue({dataValues:{'shorturl':'541449962a76777'}});
 		const response = await server.inject(options);
 		expect(response.statusCode).toBe(200);
+		expect(response.result).toBe('Short URL: 541449962a76777');
 	});
 	it ('The route POST /urls should return a statusCode 500 if payload is not given', async () => {
 		const options = {
@@ -42,6 +43,7 @@ describe('In the server', () => {
 		mockPostUrls.mockRejectedValue(new Error('longUrl Not found'));
 		const response = await server.inject(options);
 		expect(response.statusCode).toBe(500);
+		expect(response.result).toBe('longUrl Not found');
 	});
 	it ('The route GET /{id} should return a statusCode 301', async () => {
 		const options = {

@@ -15,7 +15,7 @@ describe('The function urlGenerator', () => {
 			}
 		};
 		const mockInsertUrls = jest.spyOn(dbUtils, 'insertUrls');
-		mockInsertUrls.mockResolvedValue({'dataValues':{'shorturl':'localhost:8080/abcd'}});
+		mockInsertUrls.mockResolvedValue({dataValues:{'shorturl':'localhost:8080/abcd'}});
 		await urlGenerator(mockRequest, mockHandler);
 		expect(mockInsertUrls).toHaveBeenCalled();
 		expect(codeMock).toHaveBeenCalledWith(200);
@@ -76,5 +76,28 @@ describe('The function redirectUrl', () => {
 		expect(mockFindOneUrl).toHaveBeenCalled();
 		expect(codeMock).toHaveBeenCalledWith(404);
 		expect(mockHandler.response).toHaveBeenCalledWith('Not Found');
+	});
+	it ('should call response with Gone and 410 status code when the url expires', async() => {
+		const codeMock = jest.fn();
+		const mockHandler = {
+			response: jest.fn(
+				() => {
+					return {code: codeMock};
+				}),
+		};
+		const mockRequest = {
+			params: 'localhost:8080/6a9159ba1210825'
+		};
+		const mockFindOneUrl = jest.spyOn(dbUtils, 'findOneUrl');
+		mockFindOneUrl.mockResolvedValue({'dataValues': {
+			'longurl': 'https://www.github.com/sarvani',
+			'shorturl': '296a143bb370236',
+			'createdAt': new Date('2018-01-30'),
+			'updatedAt': '2020-01-30T13:23:30.138Z'
+		}});
+		await redirectUrl(mockRequest, mockHandler);
+		expect(mockFindOneUrl).toHaveBeenCalled();
+		expect(codeMock).toHaveBeenCalledWith(410);
+		// expect(mockHandler.response).toHaveBeenCalledWith('Gone');
 	});
 });
